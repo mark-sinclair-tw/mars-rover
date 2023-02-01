@@ -69,7 +69,7 @@ const parseRover = (line: string): Rover => {
 
 const ORIENTATION_MAP: Record<string, [number, number]> = {
   N: [0, 1],
-  S: [0, -11],
+  S: [0, -1],
   E: [1, 0],
   W: [-1, 0],
 };
