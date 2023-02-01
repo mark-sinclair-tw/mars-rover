@@ -15,33 +15,15 @@ const loadConfig = (input: string): Config => {
 
   const rovers = [];
   const instructionSeries: Instr[][] = [];
+
   for (let i = 1; i < lines.length; ++i) {
     if (i % 2 == 0) {
-      const instrChars = Array.from(lines[i]);
       const instructionSeriesIdx = i / 2 - 1;
-
-      for (const ch of instrChars) {
-        switch (ch) {
-          case "M": {
-            instructionSeries[instructionSeriesIdx].push(Instr.M);
-            break;
-          }
-          case "L": {
-            instructionSeries[instructionSeriesIdx].push(Instr.L);
-            break;
-          }
-          case "R": {
-            instructionSeries[instructionSeriesIdx].push(Instr.R);
-            break;
-          }
-        }
-      }
+      instructionSeries[instructionSeriesIdx] = parseInstructions(lines[i]);
     } else {
-      const [xStr, yStr, orientationStr] = lines[i].split(" ");
-      const position: [number, number] = [parseInt(xStr), parseInt(yStr)];
-      const orientation = ORIENTATION_MAP[orientationStr];
+      const rover = parseRover(lines[i]);
 
-      rovers.push(new Rover(position, orientation));
+      rovers.push(rover);
       instructionSeries.push([]);
     }
   }
@@ -51,6 +33,38 @@ const loadConfig = (input: string): Config => {
     rovers,
     instructions: instructionSeries,
   };
+};
+
+const parseInstructions = (line: string): Instr[] => {
+  const instructionBatch = [];
+  const instrChars = Array.from(line);
+
+  for (const ch of instrChars) {
+    switch (ch) {
+      case "M": {
+        instructionBatch.push(Instr.M);
+        break;
+      }
+      case "L": {
+        instructionBatch.push(Instr.L);
+        break;
+      }
+      case "R": {
+        instructionBatch.push(Instr.R);
+        break;
+      }
+    }
+  }
+
+  return instructionBatch;
+};
+
+const parseRover = (line: string): Rover => {
+  const [xStr, yStr, orientationStr] = line.split(" ");
+  const position: [number, number] = [parseInt(xStr), parseInt(yStr)];
+  const orientation = ORIENTATION_MAP[orientationStr];
+
+  return new Rover(position, orientation);
 };
 
 const ORIENTATION_MAP: Record<string, [number, number]> = {
