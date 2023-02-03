@@ -3,7 +3,7 @@ import { Instr, Plateau, Rover } from "models";
 type Config = {
   plateau: Plateau;
   rovers: Rover[];
-  instructions: string[][];
+  instructions: Instr[][];
 };
 
 const loadConfig = (input: string): Config => {

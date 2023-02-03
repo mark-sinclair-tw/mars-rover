@@ -8,6 +8,10 @@ describe("Instruction execution", () => {
     rover.execute(Instr.L);
 
     expect(rover.orientation).toEqual([0, 1]);
+
+    rover.execute(Instr.L);
+
+    expect(rover.orientation).toEqual([-1, 0]);
   });
   it("should rotate 90deg clockwise given `R` instruction", () => {
     const rover = new Rover([0, 0], [-1, 0]);
@@ -15,13 +19,20 @@ describe("Instruction execution", () => {
     rover.execute(Instr.R);
 
     expect(rover.orientation).toEqual([0, 1]);
+
+    rover.execute(Instr.R);
+
+    expect(rover.orientation).toEqual([1, 0]);
   });
   it("should move & update position according current orientation given `M` instruction", () => {
     const rover = new Rover([0, 0], [0, 1]);
 
     rover.execute(Instr.M);
+    rover.execute(Instr.M);
+    rover.execute(Instr.M);
+    rover.execute(Instr.M);
 
-    expect(rover.position).toEqual([0, 1]);
+    expect(rover.position).toEqual([0, 4]);
   });
 
   it("should execute batched instructions", () => {

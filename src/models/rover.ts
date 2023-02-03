@@ -54,10 +54,15 @@ const counterClockwise = (orientation: [number, number]): [number, number] => {
     arraysEqual(elem, orientation)
   );
   if (current === -1) {
-    throw new Error("Unknown orientation");
+    throw new Error(`"Unknown orientation": ${orientation}`);
   }
 
-  const prevIdx = Math.abs((current - 1) % ORIENTATION_CYCLE.length);
+  const prevCandidate = current - 1;
+  const prevIdx =
+    prevCandidate < 0
+      ? ORIENTATION_CYCLE.length + prevCandidate
+      : prevCandidate;
+
   return ORIENTATION_CYCLE[prevIdx];
 };
 
