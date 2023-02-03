@@ -11,7 +11,6 @@ MMRMMRMRRM`;
   it("should move rovers to their final positions", () => {
     const config = loadConfig(input);
     const driver = new Driver(config);
-    console.log("conf", config);
 
     driver.run();
 
