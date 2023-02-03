@@ -74,4 +74,4 @@ const ORIENTATION_MAP: Record<string, [number, number]> = {
   W: [-1, 0],
 };
 
-export { Config, loadConfig };
+export { Config, loadConfig, ORIENTATION_MAP };

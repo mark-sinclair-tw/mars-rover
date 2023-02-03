@@ -28,4 +28,16 @@ MMRMMRMRRM`;
     expect(driver.rovers[0].orientation).toEqual([0, 1]);
     expect(driver.rovers[1].orientation).toEqual([1, 0]);
   });
+
+  it("should report the position and orientation of rovers", () => {
+    const expectedReport = `1 3 N
+5 1 E
+`;
+    const config = loadConfig(input);
+    const driver = new Driver(config);
+
+    driver.run();
+
+    expect(driver.report()).toEqual(expectedReport);
+  });
 });

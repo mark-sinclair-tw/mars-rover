@@ -84,4 +84,4 @@ function arraysEqual<T>(left: T[], right: T[]) {
   return true;
 }
 
-export { Rover };
+export { Rover, arraysEqual };
