@@ -1,15 +1,22 @@
-import { Instr } from "models";
+import { doesPlateauContain, Instr, Plateau } from "models";
+import { arraysEqual } from "utils";
 
-class Rover {
+export class Rover {
   position: [number, number];
   orientation: [number, number];
+  isFallen: boolean;
 
   constructor(position: [number, number], orientation: [number, number]) {
     this.position = position;
     this.orientation = orientation;
+    this.isFallen = false;
   }
 
-  execute = (instr: Instr) => {
+  execute = (instr: Instr, { plateau }: Environment) => {
+    if (this.isFallen) {
+      return;
+    }
+
     switch (instr) {
       case Instr.L: {
         this.orientation = counterClockwise(this.orientation);
@@ -22,6 +29,9 @@ class Rover {
       case Instr.M: {
         this.position[0] += this.orientation[0];
         this.position[1] += this.orientation[1];
+        if (!doesPlateauContain(plateau, this.position)) {
+          this.isFallen = true;
+        }
         return;
       }
       default: {
@@ -30,11 +40,15 @@ class Rover {
     }
   };
 
-  batchExecute = (instrs: Instr[]) => {
+  batchExecute = (instrs: Instr[], env: Environment) => {
     for (const instr of instrs) {
-      this.execute(instr);
+      this.execute(instr, env);
     }
   };
+}
+
+export interface Environment {
+  plateau: Plateau;
 }
 
 const clockwise = (orientation: [number, number]): [number, number] => {
@@ -72,16 +86,3 @@ const ORIENTATION_CYCLE: [number, number][] = [
   [0, -1], // S
   [-1, 0], // W
 ];
-
-function arraysEqual<T>(left: T[], right: T[]) {
-  if (left === right) return true;
-  if (left == null || right == null) return false;
-  if (left.length !== right.length) return false;
-
-  for (let i = 0; i < left.length; ++i) {
-    if (left[i] !== right[i]) return false;
-  }
-  return true;
-}
-
-export { Rover, arraysEqual };

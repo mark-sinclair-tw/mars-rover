@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { Config, loadConfig, Orientation, ORIENTATION_MAP } from "config";
 import { Instr, Plateau, Rover } from "models";
-import { arraysEqual } from "models/rover";
+import { arraysEqual } from "utils";
 
 class Driver {
   rovers: Rover[];
@@ -15,7 +15,7 @@ class Driver {
 
   run = () => {
     this.rovers.forEach((rover, idx) => {
-      rover.batchExecute(this.instructions[idx]);
+      rover.batchExecute(this.instructions[idx], { plateau: this.plateau });
     });
   };
 
@@ -26,7 +26,11 @@ class Driver {
       const orientationName = Object.keys(ORIENTATION_MAP).find((key) =>
         arraysEqual(ORIENTATION_MAP[key as Orientation], rover.orientation)
       );
-      reportStr += `${rover.position[0]} ${rover.position[1]} ${orientationName}\n`;
+      reportStr += `${rover.position[0]} ${rover.position[1]} ${orientationName}`;
+      if (rover.isFallen) {
+        reportStr += " (fell)";
+      }
+      reportStr += "\n";
     }
 
     return reportStr;
