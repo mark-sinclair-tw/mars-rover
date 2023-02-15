@@ -10,8 +10,8 @@ MMRMMRMRRM`;
 describe("loadConfig", () => {
   it("should read plateua dimensions from input", () => {
     const config = loadConfig(VALID_INPUT);
-    expect(config.plateau.height).toEqual(5);
-    expect(config.plateau.width).toEqual(5);
+    expect(config.plateau.maxY).toEqual(5);
+    expect(config.plateau.maxX).toEqual(5);
   });
 
   it("should read rovers' initial location from input", () => {

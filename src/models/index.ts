@@ -1,8 +1,8 @@
 import { Rover } from "./rover";
 
 type Plateau = {
-  width: number;
-  height: number;
+  maxX: number;
+  maxY: number;
 };
 
 enum Instr {
@@ -12,10 +12,10 @@ enum Instr {
 }
 
 function doesPlateauContain(
-  { width, height }: Plateau,
+  { maxX, maxY }: Plateau,
   [x, y]: [number, number]
 ): boolean {
-  return 0 <= x && x <= width && 0 <= y && y <= height;
+  return 0 <= x && x <= maxX && 0 <= y && y <= maxY;
 }
 
 export { Rover, Plateau, Instr, doesPlateauContain };

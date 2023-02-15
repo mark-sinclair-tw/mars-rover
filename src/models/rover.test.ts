@@ -2,7 +2,7 @@ import { Instr } from "models";
 import { Environment, Rover } from "./rover";
 
 const ENVIRONMENT: Environment = {
-  plateau: { width: 10, height: 10 },
+  plateau: { maxX: 10, maxY: 10 },
 };
 
 describe("Instruction execution", () => {
@@ -51,7 +51,7 @@ describe("Instruction execution", () => {
 
   it("should detect when a rover falls off the plateau", () => {
     const rover = new Rover([0, 0], [0, 1]);
-    const plateau = { width: 0, height: 0 };
+    const plateau = { maxX: 0, maxY: 0 };
 
     rover.execute(Instr.M, { plateau });
 
@@ -60,7 +60,7 @@ describe("Instruction execution", () => {
 
   it("should stop moving when it falls off the plateau", () => {
     const rover = new Rover([0, 0], [0, 1]);
-    const plateau = { width: 0, height: 0 };
+    const plateau = { maxX: 0, maxY: 0 };
     rover.execute(Instr.M, { plateau });
     const fallPosition = [...rover.position];
 
@@ -71,7 +71,7 @@ describe("Instruction execution", () => {
 
   it("should stop turning when it falls off the plateau", () => {
     const rover = new Rover([0, 0], [0, 1]);
-    const plateau = { width: 0, height: 0 };
+    const plateau = { maxX: 0, maxY: 0 };
     rover.execute(Instr.M, { plateau });
     const fallOrientation = [...rover.orientation];
 

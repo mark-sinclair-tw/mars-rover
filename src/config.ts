@@ -5,8 +5,8 @@ const loadConfig = (input: string): Config => {
   validateLines(lines);
 
   const [widthStr, heightStr] = lines[0].split(" ");
-  const [width, height] = [parseInt(widthStr), parseInt(heightStr)];
-  const plateau = { width, height };
+  const [maxX, maxY] = [parseInt(widthStr), parseInt(heightStr)];
+  const plateau = { maxX, maxY };
 
   const rovers = [];
   const instructionSeries: Instr[][] = [];
@@ -104,7 +104,7 @@ function validatePosition(
   if (position[0] < 0 || position[1] < 0) {
     throw new ConfigError(`Negative rover coordinates: (${xStr}, ${yStr})`);
   }
-  if (position[0] > plateau.width || position[1] > plateau.height) {
+  if (position[0] > plateau.maxX || position[1] > plateau.maxY) {
     throw new ConfigError(
       `Out-of-bounds rover coordinates: (${xStr}, ${yStr})`
     );
