@@ -1,21 +1,21 @@
-import { loadConfig } from "config";
+import { ConfigError, loadConfig } from "config";
 import { Instr } from "models";
 
-describe("loadConfig", () => {
-  const input = `5 5
+const VALID_INPUT = `5 5
 1 2 N
 LMLMLMLMM
 3 3 E
 MMRMMRMRRM`;
 
+describe("loadConfig", () => {
   it("should read plateua dimensions from input", () => {
-    const config = loadConfig(input);
+    const config = loadConfig(VALID_INPUT);
     expect(config.plateau.height).toEqual(5);
     expect(config.plateau.width).toEqual(5);
   });
 
   it("should read rovers' initial location from input", () => {
-    const config = loadConfig(input);
+    const config = loadConfig(VALID_INPUT);
 
     expect(config.rovers).toHaveLength(2);
     expect(config.rovers[0].position).toEqual([1, 2]);
@@ -23,7 +23,7 @@ MMRMMRMRRM`;
   });
 
   it("should read rovers' initial orientations from input", () => {
-    const config = loadConfig(input);
+    const config = loadConfig(VALID_INPUT);
 
     expect(config.rovers).toHaveLength(2);
     expect(config.rovers[0].orientation).toEqual([0, 1]);
@@ -56,8 +56,70 @@ MMRMMRMRRM`;
         Instr.M,
       ],
     ];
-    const config = loadConfig(input);
+    const config = loadConfig(VALID_INPUT);
 
     expect(config.instructions).toEqual(expectedInstructions);
+  });
+
+  describe("validation", () => {
+    it("should reject inputs with an invalid number of lines", () => {
+      const badInput = VALID_INPUT.split("\n").slice(0, 2).join("\n");
+
+      const action = () => console.log(loadConfig(badInput));
+
+      expect(action).toThrow(ConfigError);
+    });
+
+    it("should reject unknown instructions", () => {
+      const badInput = VALID_INPUT.replace("M", "_");
+
+      const action = () => console.log(loadConfig(badInput));
+
+      expect(action).toThrow(ConfigError);
+    });
+
+    it("should reject unknown orientations", () => {
+      const badInput = VALID_INPUT.replace("N", "NE");
+
+      const action = () => console.log(loadConfig(badInput));
+
+      expect(action).toThrow(ConfigError);
+    });
+
+    it("should reject invalid rover coordinates", () => {
+      const badInput = VALID_INPUT.replaceAll("3", "X");
+
+      const action = () => console.log(loadConfig(badInput));
+
+      expect(action).toThrow(ConfigError);
+    });
+
+    it("should reject rover coordinates outside the plateau", () => {
+      const badInput = [
+        "5 5",
+        "6 2 N",
+        "LMLMLMLMM",
+        "3 3 E",
+        "MMRMMRMRRM",
+      ].join("\n");
+
+      const action = () => console.log(loadConfig(badInput));
+
+      expect(action).toThrow(ConfigError);
+    });
+
+    it("should reject negative rover coordinates", () => {
+      const badInput = [
+        "5 5",
+        "1 2 N",
+        "LMLMLMLMM",
+        "-1 -3 E",
+        "MMRMMRMRRM",
+      ].join("\n");
+
+      const action = () => console.log(loadConfig(badInput));
+
+      expect(action).toThrow(ConfigError);
+    });
   });
 });

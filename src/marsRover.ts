@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { Config, loadConfig, ORIENTATION_MAP } from "config";
+import { Config, loadConfig, Orientation, ORIENTATION_MAP } from "config";
 import { Instr, Plateau, Rover } from "models";
 import { arraysEqual } from "models/rover";
 
@@ -24,7 +24,7 @@ class Driver {
 
     for (const rover of this.rovers) {
       const orientationName = Object.keys(ORIENTATION_MAP).find((key) =>
-        arraysEqual(ORIENTATION_MAP[key], rover.orientation)
+        arraysEqual(ORIENTATION_MAP[key as Orientation], rover.orientation)
       );
       reportStr += `${rover.position[0]} ${rover.position[1]} ${orientationName}\n`;
     }

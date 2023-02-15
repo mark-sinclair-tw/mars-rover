@@ -1,13 +1,8 @@
 import { Instr, Plateau, Rover } from "models";
 
-type Config = {
-  plateau: Plateau;
-  rovers: Rover[];
-  instructions: Instr[][];
-};
-
 const loadConfig = (input: string): Config => {
   const lines = input.split("\n");
+  validateLines(lines);
 
   const [widthStr, heightStr] = lines[0].split(" ");
   const [width, height] = [parseInt(widthStr), parseInt(heightStr)];
@@ -21,7 +16,7 @@ const loadConfig = (input: string): Config => {
       const instructionSeriesIdx = i / 2 - 1;
       instructionSeries[instructionSeriesIdx] = parseInstructions(lines[i]);
     } else {
-      const rover = parseRover(lines[i]);
+      const rover = parseRover(plateau, lines[i]);
 
       rovers.push(rover);
       instructionSeries.push([]);
@@ -33,6 +28,28 @@ const loadConfig = (input: string): Config => {
     rovers,
     instructions: instructionSeries,
   };
+};
+
+type Config = {
+  plateau: Plateau;
+  rovers: Rover[];
+  instructions: Instr[][];
+};
+
+class ConfigError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = ConfigError.name;
+  }
+}
+
+const ORIENTATIONS = ["N", "S", "E", "W"] as const;
+type Orientation = (typeof ORIENTATIONS)[number];
+const ORIENTATION_MAP: Record<Orientation, [number, number]> = {
+  N: [0, 1],
+  S: [0, -1],
+  E: [1, 0],
+  W: [-1, 0],
 };
 
 const parseInstructions = (line: string): Instr[] => {
@@ -53,25 +70,62 @@ const parseInstructions = (line: string): Instr[] => {
         instructionBatch.push(Instr.R);
         break;
       }
+      default: {
+        throw new ConfigError(`Unknown Instuction '${ch}'`);
+      }
     }
   }
 
   return instructionBatch;
 };
 
-const parseRover = (line: string): Rover => {
+const parseRover = (plateau: Plateau, line: string): Rover => {
   const [xStr, yStr, orientationStr] = line.split(" ");
+
   const position: [number, number] = [parseInt(xStr), parseInt(yStr)];
+  validatePosition(position, plateau, [xStr, yStr]);
+
+  if (!validateOrientation(orientationStr)) {
+    throw new ConfigError(`Unknown orientation '${orientationStr}'`);
+  }
   const orientation = ORIENTATION_MAP[orientationStr];
 
   return new Rover(position, orientation);
 };
 
-const ORIENTATION_MAP: Record<string, [number, number]> = {
-  N: [0, 1],
-  S: [0, -1],
-  E: [1, 0],
-  W: [-1, 0],
-};
+function validatePosition(
+  position: [number, number],
+  plateau: Plateau,
+  [xStr, yStr]: [string, string]
+) {
+  if (isNaN(position[0]) || isNaN(position[1])) {
+    throw new ConfigError(`Invalid rover coordinates: (${xStr}, ${yStr})`);
+  }
+  if (position[0] < 0 || position[1] < 0) {
+    throw new ConfigError(`Negative rover coordinates: (${xStr}, ${yStr})`);
+  }
+  if (position[0] > plateau.width || position[1] > plateau.height) {
+    throw new ConfigError(
+      `Out-of-bounds rover coordinates: (${xStr}, ${yStr})`
+    );
+  }
+}
 
-export { Config, loadConfig, ORIENTATION_MAP };
+function validateLines(lines: string[]) {
+  if ((lines.length - 1) % 2) {
+    throw new ConfigError("Invalid number of lines");
+  }
+}
+
+function validateOrientation(str: string): str is Orientation {
+  return !!ORIENTATIONS.find((orientation) => orientation === str);
+}
+
+export {
+  Config,
+  loadConfig,
+  Orientation,
+  ORIENTATIONS,
+  ORIENTATION_MAP,
+  ConfigError,
+};
