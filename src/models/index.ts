@@ -9,6 +9,9 @@ enum Instr {
   L = "L",
   R = "R",
   M = "M",
+  B = "B",
+  l = "l",
+  r = "r",
 }
 
 function doesPlateauContain(

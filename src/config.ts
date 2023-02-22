@@ -43,13 +43,17 @@ class ConfigError extends Error {
   }
 }
 
-const ORIENTATIONS = ["N", "S", "E", "W"] as const;
+const ORIENTATIONS = ["N", "S", "E", "W", "NW", "NE", "SE", "SW"] as const;
 type Orientation = (typeof ORIENTATIONS)[number];
 const ORIENTATION_MAP: Record<Orientation, [number, number]> = {
   N: [0, 1],
   S: [0, -1],
   E: [1, 0],
   W: [-1, 0],
+  NW: [-1, 1],
+  NE: [1, 1],
+  SE: [1, -1],
+  SW: [-1, -1],
 };
 
 const parseInstructions = (line: string): Instr[] => {
@@ -68,6 +72,18 @@ const parseInstructions = (line: string): Instr[] => {
       }
       case "R": {
         instructionBatch.push(Instr.R);
+        break;
+      }
+      case "B": {
+        instructionBatch.push(Instr.B);
+        break;
+      }
+      case "l": {
+        instructionBatch.push(Instr.l);
+        break;
+      }
+      case "r": {
+        instructionBatch.push(Instr.r);
         break;
       }
       default: {

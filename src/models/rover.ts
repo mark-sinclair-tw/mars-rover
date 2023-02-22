@@ -34,6 +34,14 @@ export class Rover {
         }
         return;
       }
+      case Instr.B: {
+        this.position[0] -= this.orientation[0];
+        this.position[1] -= this.orientation[1];
+        if (!doesPlateauContain(plateau, this.position)) {
+          this.isFallen = true;
+        }
+        return;
+      }
       default: {
         throw new Error(`Unknown instruction: '${instr}'`);
       }

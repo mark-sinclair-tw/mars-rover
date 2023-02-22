@@ -39,6 +39,17 @@ describe("Instruction execution", () => {
     expect(rover.position).toEqual([0, 4]);
   });
 
+  it("should remain in original place given `M` then `B` instruction", () => {
+    const rover = new Rover([0, 0], [0, 1]);
+
+    rover.execute(Instr.M, ENVIRONMENT);
+    rover.execute(Instr.M, ENVIRONMENT);
+    rover.execute(Instr.B, ENVIRONMENT);
+    rover.execute(Instr.B, ENVIRONMENT);
+
+    expect(rover.position).toEqual([0, 0]);
+  });
+
   it("should execute batched instructions", () => {
     const instructionBatch = [Instr.M, Instr.R, Instr.M, Instr.L];
     const rover = new Rover([0, 0], [0, 1]);
@@ -49,11 +60,20 @@ describe("Instruction execution", () => {
     expect(rover.orientation).toEqual([0, 1]);
   });
 
-  it("should detect when a rover falls off the plateau", () => {
+  it("should detect when a rover falls off the plateau forwards", () => {
     const rover = new Rover([0, 0], [0, 1]);
     const plateau = { maxX: 0, maxY: 0 };
 
     rover.execute(Instr.M, { plateau });
+
+    expect(rover.isFallen).toBe(true);
+  });
+
+  it("should detect when a rover falls off the plateau backwards", () => {
+    const rover = new Rover([0, 0], [0, 1]);
+    const plateau = { maxX: 0, maxY: 0 };
+
+    rover.execute(Instr.B, { plateau });
 
     expect(rover.isFallen).toBe(true);
   });

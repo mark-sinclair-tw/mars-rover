@@ -7,6 +7,12 @@ LMLMLMLMM
 3 3 E
 MMRMMRMRRM`;
 
+const VALID_INPUT_MOD_2 = `5 5
+1 2 NE
+MBMB
+3 3 SW
+lrMlrB`;
+
 describe("loadConfig", () => {
   it("should read plateua dimensions from input", () => {
     const config = loadConfig(VALID_INPUT);
@@ -28,6 +34,24 @@ describe("loadConfig", () => {
     expect(config.rovers).toHaveLength(2);
     expect(config.rovers[0].orientation).toEqual([0, 1]);
     expect(config.rovers[1].orientation).toEqual([1, 0]);
+  });
+
+  it("should read rovers' initial orientations from input, including diagonals", () => {
+    const config = loadConfig(VALID_INPUT_MOD_2);
+
+    expect(config.rovers).toHaveLength(2);
+    expect(config.rovers[0].orientation).toEqual([1, 1]);
+    expect(config.rovers[1].orientation).toEqual([-1, -1]);
+  });
+
+  it("should read rovers' instructions from input, including 45deg rotations", () => {
+    const expectedInstructions = [
+      [Instr.M, Instr.B, Instr.M, Instr.B],
+      [Instr.l, Instr.r, Instr.M, Instr.l, Instr.r, Instr.B],
+    ];
+    const config = loadConfig(VALID_INPUT_MOD_2);
+
+    expect(config.instructions).toEqual(expectedInstructions);
   });
 
   it("should read rovers' instructions from input", () => {
