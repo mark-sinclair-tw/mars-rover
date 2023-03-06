@@ -59,6 +59,9 @@ export interface Environment {
   plateau: Plateau;
 }
 
+// TODO: Either switch more readable if-else chains or switch statements
+// or figure out a way to make modular arithmetic not hideous
+
 const clockwise = (orientation: [number, number]): [number, number] => {
   const current = ORIENTATION_CYCLE.findIndex((elem) =>
     arraysEqual(elem, orientation)
@@ -90,7 +93,11 @@ const counterClockwise = (orientation: [number, number]): [number, number] => {
 
 const ORIENTATION_CYCLE: [number, number][] = [
   [0, 1], // N
+  //NE
   [1, 0], // E
+  //SE
   [0, -1], // S
+  //SW
   [-1, 0], // W
+  //NW
 ];
