@@ -24,8 +24,8 @@ MMRMMRMRRM`;
 
     driver.run();
 
-    expect(driver.rovers[0].orientation).toEqual([0, 1]);
-    expect(driver.rovers[1].orientation).toEqual([1, 0]);
+    expect(driver.rovers[0].orientation()).toEqual("N");
+    expect(driver.rovers[1].orientation()).toEqual("E");
   });
 
   it("should report the position and orientation of rovers", () => {

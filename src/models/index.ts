@@ -1,3 +1,4 @@
+import { Direction, Turn } from "./direction";
 import { Rover } from "./rover";
 
 type Plateau = {
@@ -21,4 +22,4 @@ function doesPlateauContain(
   return 0 <= x && x <= maxX && 0 <= y && y <= maxY;
 }
 
-export { Rover, Plateau, Instr, doesPlateauContain };
+export { Rover, Plateau, Instr, doesPlateauContain, Direction, Turn };

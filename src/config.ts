@@ -45,16 +45,6 @@ class ConfigError extends Error {
 
 const ORIENTATIONS = ["N", "S", "E", "W", "NW", "NE", "SE", "SW"] as const;
 type Orientation = (typeof ORIENTATIONS)[number];
-const ORIENTATION_MAP: Record<Orientation, [number, number]> = {
-  N: [0, 1],
-  S: [0, -1],
-  E: [1, 0],
-  W: [-1, 0],
-  NW: [-1, 1],
-  NE: [1, 1],
-  SE: [1, -1],
-  SW: [-1, -1],
-};
 
 const parseInstructions = (line: string): Instr[] => {
   const instructionBatch = [];
@@ -104,9 +94,8 @@ const parseRover = (plateau: Plateau, line: string): Rover => {
   if (!validateOrientation(orientationStr)) {
     throw new ConfigError(`Unknown orientation '${orientationStr}'`);
   }
-  const orientation = ORIENTATION_MAP[orientationStr];
 
-  return new Rover(position, orientation);
+  return new Rover(position, orientationStr);
 };
 
 function validatePosition(
@@ -137,11 +126,4 @@ function validateOrientation(str: string): str is Orientation {
   return !!ORIENTATIONS.find((orientation) => orientation === str);
 }
 
-export {
-  Config,
-  loadConfig,
-  Orientation,
-  ORIENTATIONS,
-  ORIENTATION_MAP,
-  ConfigError,
-};
+export { Config, loadConfig, Orientation, ORIENTATIONS, ConfigError };

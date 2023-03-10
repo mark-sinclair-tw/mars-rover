@@ -32,16 +32,16 @@ describe("loadConfig", () => {
     const config = loadConfig(VALID_INPUT);
 
     expect(config.rovers).toHaveLength(2);
-    expect(config.rovers[0].orientation).toEqual([0, 1]);
-    expect(config.rovers[1].orientation).toEqual([1, 0]);
+    expect(config.rovers[0].orientation()).toEqual("N");
+    expect(config.rovers[1].orientation()).toEqual("E");
   });
 
   it("should read rovers' initial orientations from input, including diagonals", () => {
     const config = loadConfig(VALID_INPUT_MOD_2);
 
     expect(config.rovers).toHaveLength(2);
-    expect(config.rovers[0].orientation).toEqual([1, 1]);
-    expect(config.rovers[1].orientation).toEqual([-1, -1]);
+    expect(config.rovers[0].orientation()).toEqual("NE");
+    expect(config.rovers[1].orientation()).toEqual("SW");
   });
 
   it("should read rovers' instructions from input, including 45deg rotations", () => {
@@ -103,7 +103,7 @@ describe("loadConfig", () => {
     });
 
     it("should reject unknown orientations", () => {
-      const badInput = VALID_INPUT.replace("N", "NE");
+      const badInput = VALID_INPUT.replace("N", "NNE");
 
       const action = () => console.log(loadConfig(badInput));
 
